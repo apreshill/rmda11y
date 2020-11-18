@@ -1,0 +1,344 @@
+---
+title: "The R Markdown a11y theme"
+author: "Alison Hill"
+date: "11/11/2020"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
+```
+
+```{r, include=FALSE}
+source("functions.R", local = knitr::knit_global())
+```
+
+
+## Log changes
+
+### Round 1, suggested by Hadley
+
+op -> fu (operators to #4254A7 - cobalt) 
+
+pp -> dt (preprocessor to #aa5d00 - a11y chelsea gem)
+
+do -> co (documentation to #545454 - a11y emporer)
+
+cn -> fl (constant to #a1024a - magenta)
+
+ss -> st (special string to #008000 - a11y japanese laurel)
+
+er/al -> old cn (errors/alerts to #d91e18 - a11y thunderbird;
+functionally replace #ff0000 with #d91e18)
+
+### Round 2, added by Alison
+
+at -> st (attribute to #008000 - a11y japanese laurel)
+
+### Round 3, added by Alison (again)
+
+`#545454` -> `#5E5E5E` (an/in/wa/do/co/cv) [replace a11y emporer]
+
+`#007faa` -> `#006893` (ot/cf/kw) [replace a11y deep cerulean]
+
+`#d91e18` -> `#BD1600` (er/al) [replace a11y thunderbird]
+
+`#008000` -> `#006E4C` (at/ss/st/vs/ch/sc) [replace a11y japanese laurel]
+
+`#4254A7` -> `#4452C4` (fu/op) [not a11y]
+
+`#19177c` -> `#??` (va) [not a11y]
+
+
+## Exploration 
+
+```{r}
+a11y <- read_theme("https://github.com/rstudio/distill/raw/master/inst/rmarkdown/templates/distill_article/resources/a11y.theme")
+#a11y <- read_theme("a11y_v2.theme")
+
+#a11y <- read_theme("a11y_v3.theme")
+
+bg <- "#f8f8f8"
+col <- a11y %>%
+  group_by(fg) %>%
+  summarise(abbr = paste(abbr, collapse = "/"), .groups = "drop") %>%
+  filter(!is.na(fg)) %>% 
+  mutate(contrast = contrast_ratio(fg, bg))
+
+col %>% plot_uv()
+
+col %>% plot_cl()
+
+col %>% 
+  arrange(contrast)
+
+plot(prismatic::color(col$fg), labels = TRUE)
+```
+
+## Consolidate colors -> `col2`
+
+```{r}
+col2 <- col %>%
+  filter(!abbr %in% c("op", "pp", "do", "cn", "ss", "at")) %>% 
+  mutate(fg_before2 = fg) %>% 
+  mutate(fg = ifelse(abbr == "er/al", "#d91e18", fg)) %>% 
+  mutate(contrast = contrast_ratio(fg, bg))
+
+plot(prismatic::color(col2$fg), labels = TRUE)
+```
+
+## Problems now:
+
+1. `a11y` deep cerulean (`#007BA5`) is not high enough contrast with `#f8f8f8` background color
+
+    ```{r}
+    col2 %>% filter(contrast < 4.5)
+    ```
+
+
+1. `va` is too close to `fu/op` (two blues)
+
+1. Lightness: adjust to about 40 (check)
+
+1. Colorfulness: colors with similar chroma values will look less jarring
+
+1. green + red = xmas?
+
+
+
+## Adjust lightness -> `col3`
+
+Stabilize lightness of colors - this means that none of the hex values match the original a11y hex colors anymore
+
+```{r}
+col2 %>% filter(contrast < 4.5)
+
+col3 <- col2 %>%
+  mutate(
+    fg_before3 = fg, 
+    fg = modify_hcl(fg, l = 40),
+    contrast = contrast_ratio(fg, bg)
+  ) 
+
+col3 %>% pull(contrast) %>% sort() %>% round(1)
+
+col3 %>% plot_uv()
+
+plot(prismatic::color(col3$fg), labels = TRUE)
+```
+
+## Make colors more distinct -> `col4`
+
+aka questioning all the decisions thus far
+
+1. `va` is too close to `fu/op`
+
+    + make `fu/op` more negative on `v` channel? (done, -> `#4452C4`)
+
+    + move `va` more positive on `u` channel?
+
+1. make colours further apart - e.g. switch `bn/fl/dv` with `dt` (done)
+
+```{r}
+keepers <- c("bn/fl/dv", "ot/cf/kw")
+col4 <- col3 %>%
+  # save old fg
+  mutate(fg_before4 = fg) %>% 
+  # replace the grey
+  mutate(fg = ifelse(abbr == "an/in/wa/co/cv", 
+                     "#5E5E5E", 
+                     fg)) %>% 
+  # replace the red
+  mutate(fg = ifelse(abbr == "er/al", 
+                     "#BD1600", 
+                     fg)) %>% 
+  # replace the green 
+  mutate(fg = ifelse(abbr == "st/vs/ch/sc", 
+                     "#006E4C", 
+                     fg)) %>% 
+  # replace the cobalt 
+  mutate(fg = ifelse(abbr == "fu", 
+                     "#4452C4", 
+                     fg)) %>%   
+  # switch `bn/fl/dv` with `dt`
+  mutate(fg = ifelse(abbr == "bn/fl/dv", "#954A00", fg)) %>% 
+  mutate(fg = ifelse(abbr == "dt", "#B12458", fg)) %>%
+  # replace va
+  mutate(
+    fg = ifelse(abbr == "va", 
+                modify_hcl(fg, h = 290), fg),
+    fg = ifelse(abbr == "va", 
+                set_channel(fg, "u", 50, space = "Luv"), fg)
+    #fg = ifelse(abbr == "va", 
+                #set_channel(fg, "v", -75, space = "Luv"), fg)
+  ) %>% 
+  # lighten again
+  mutate(
+    fg = ifelse(!(abbr %in% keepers), 
+                modify_hcl(fg, l = 40), 
+                fg),
+    contrast = contrast_ratio(fg, bg)
+  ) %>% 
+  # last switcheroo
+  mutate(fg = ifelse(abbr == "bn/fl/dv", "#9D2E93", fg)) %>% 
+  mutate(fg = ifelse(abbr == "va", "#954A00", fg))
+  
+col4 %>% plot_uv()
+
+plot(prismatic::color(col4$fg), labels = TRUE)
+```
+
++ feels like need to choose between va / dt / er / al 
+
++ also feels like lightness correction overcorrects for chelsea gem and deep cerulean, would rather keep those as fg_before4 vals just make sure the contrast is optimal
+
+## Check in
+
+with those changes, here is where I think I am
+
+```{r}
+a11y_v2 <- read_theme("a11y_v2.theme")
+bg <- "#f8f8f8"
+col_v2 <- a11y_v2 %>%
+  group_by(fg) %>%
+  summarise(abbr = paste(abbr, collapse = "/"), .groups = "drop") %>%
+  filter(!is.na(fg)) %>% 
+  mutate(contrast = contrast_ratio(fg, bg))
+
+col_v2 %>% plot_uv()
+
+col_v2 %>% plot_cl()
+
+col_v2 %>% 
+  arrange(contrast)
+
+plot(prismatic::color(col_v2$fg), labels = TRUE)
+```
+
+
+
+
+
+```{r}
+testing <- tibble(
+  fg = c("#5842ff", "#7060eb", "#06805e", "#3D9970", "#003366", "#D63519", "#DD2810", "#9a61b2"),
+  abbr = c("electric", "blue", "green", "olive", "navy", "new_red", "redd", "zoo")
+)
+
+# some candidate color replacements
+cand_colors <- tribble(
+  ~abbr, ~fg,
+  "ocean_green", "#3D9970", 
+  "royal_heath", "#9E2F91",
+  "purple", "#9b009e",
+  "elf_green", "#06805e",
+  "thunderbird", "#D63519",
+  "gov_bay", "#3b4bbf",
+  "atoll", "#096B72") %>%
+  mutate(
+    fg = modify_hcl(fg, l = 40),
+    contrast = contrast_ratio(fg, bg)
+  ) 
+
+# all check out for contrast
+cand_colors
+
+plot_uv(cand_colors)
+```
+
+
+
+
+# Adjust chroma? 
+# ----------------------------------------------------------
+
+```{r}
+blend <- function(x, y, delta) {
+  x * delta + y * (1 - delta)
+}
+
+col5 <- col4 %>%
+  mutate(
+    fg_before5 = fg,
+    fg = modify_hcl(fg, 
+                    c = ifelse(c < 1, c, blend(c, 40, 0.4))
+                    )
+    )
+col5 %>% plot_uv()
+
+col5
+```
+
+
+# Colour blindness - experiment
+# --------------------------------------------------------
+```{r}
+col4 %>%
+  mutate(fg = prismatic::clr_deutan(fg)) %>%
+  plot_uv()
+
+
+# Alternate between lighter and dark between adjacent hues
+# Not very effective
+col4 <- col3 %>%
+  mutate(hcl(fg)) %>%
+  arrange(h) %>%
+  mutate(fg = modify_hcl(fg, l = rep(c(20, 50), length.out = nrow(col3))))
+col4 %>% plot_uv()
+
+col4 %>%
+  mutate(fg = prismatic::clr_deutan(fg)) %>%
+  plot_uv()
+
+# Might be better to just switch colours so that the most important
+# colours are further apart - e.g. switch bn/fl/dv with dt
+```
+
+---
+## ukekele moon :)
+
+```{r}
+ukelele <- tribble(
+  ~abbr, ~fg,
+  "sky", "#0c2b85",
+  "scarf", "#9b1d3d",
+  "uke", "#328a75",
+  "fox", "#c06b2e",
+  "gray", "#727272",
+  "teal", "#007faa" 
+  ) %>% 
+  # adjust luminance
+  mutate(
+    fg = ifelse(!abbr %in% c("sky", "scarf"), 
+                modify_hcl(fg, l = 40), 
+                fg),
+    contrast = contrast_ratio(fg, bg)
+  )
+
+ukelele
+plot_uv(ukelele) +coord_cartesian(xlim = c(-80, 80), ylim = c(-75, 75))
+plot(prismatic::color(ukelele$fg), labels = TRUE)
+
+ukelele %>%
+  mutate(fg = prismatic::clr_deutan(fg)) %>%
+  plot_uv()
+
+ukelele %>%
+  mutate(fg = prismatic::clr_greyscale(fg)) %>%
+  plot_cl()
+```
+
+green 
+
+#006C4A -> uke   #006C57
+
+#954a00 -> scarf #9b1d3d 
+
+#006893 -> kala #006D6F
+
+#4452c4 -> sky   #0c2b85
+
+#5e5e5e -> gray  #5E5E5E (don't change!)
+
+#111 -> fox   #994800 

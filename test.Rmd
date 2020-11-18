@@ -1,0 +1,96 @@
+---
+title: "The R Markdown a11y theme"
+author: "Alison Hill"
+date: "11/11/2020"
+output:
+  distill::distill_article:
+    highlight: a11y_v3.theme
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'a11y_v3.html')) })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
+library(tidyverse)
+```
+
+## Theme used
+
+```{r}
+rmarkdown::metadata$output %>% 
+  pluck(1, 1)
+```
+
+
+## Testing colors here
+
+```{r eval=FALSE}
+gitbook(fig_caption = TRUE, number_sections = TRUE,
+  self_contained = FALSE, lib_dir = "libs",
+  pandoc_args = NULL, ..., template = "default",
+  split_by = c("chapter", "chapter+number", "section", "section+number", "rmd", "none"),
+  split_bib = TRUE, config = list(), table_css = TRUE)
+```
+
+```{r eval=FALSE}
+ui <- fluidPage(
+  fileInput("upload", NULL, buttonLabel = "Upload...", multiple = TRUE),
+  tableOutput("files")
+)
+server <- function(input, output, session) {
+  output$files <- renderTable(input$upload)
+}
+```
+
+```{r eval=FALSE}
+server <- function(input, output, session) {
+  t <- reactive(seq(0, input$length, length = input$length * 100))
+  x <- reactive(sin(input$omega * t() + input$delta) * input$damping ^ t())
+  y <- reactive(sin(t()) * input$damping ^ t())
+
+  output$fig <- renderPlot({
+    plot(x(), y(), axes = FALSE, xlab = "", ylab = "", type = "l", lwd = 2)
+  }, res = 96)
+  
+  observe({
+    reactiveValuesToList(input)
+    session$doBookmark()
+  })
+  onBookmarked(updateQueryString)
+}
+```
+
+
+
+```{.yaml}
+---
+title: "Distill for R Markdown"
+description: | 
+  Scientific and technical writing, native to the web
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
+---
+```
+
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+penguins %>% 
+  dplyr::filter(year == 2007 & species == "Gentoo") %>% 
+  dplyr::summarise(mean_fl = mean(flipper_length_mm, na.rm = TRUE))
+```
+
+```{r}
+glimpse(penguins)
+```
+
+
+```{r fig.cap="some cool penguins"}
+# Histogram example: flipper length by species
+ggplot(data = penguins, aes(x = flipper_length_mm)) +
+  geom_histogram(aes(fill = species), alpha = 0.5, position = "identity") +
+  scale_fill_manual(values = c("darkorange","darkorchid","cyan4"))
+```
