@@ -121,7 +121,7 @@ plot_cl <- function(df) {
     labs(x = "luminance", y = "chroma")
 }
   
-plot_uv <- function(df) {
+plot_uv <- function(df, bg = "#f8f8f8") {
   df %>%
     mutate(Luv(fg)) %>%
     ggplot(aes(u, v)) +

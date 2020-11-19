@@ -14,12 +14,18 @@ options(scipen=999)
 library(tidyverse)
 ```
 
+```{r, include=FALSE}
+source("functions.R", local = knitr::knit_global())
+```
+
 ## Theme used
 
 ```{r}
 rmarkdown::metadata$output %>% 
   pluck(1, 1)
 ```
+
+
 
 
 ## Testing colors here
