@@ -12,14 +12,14 @@
             "underline": false
         },
         "Attribute": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "SpecialString": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -33,14 +33,14 @@
             "underline": false
         },
         "Function": {
-            "text-color": "#006893",
+            "text-color": "#4758AB",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "String": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -54,28 +54,28 @@
             "underline": false
         },
         "Operator": {
-            "text-color": "#006893", 
+            "text-color": "#4758AB", 
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "Error": {
-            "text-color": "#B12458",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "BaseN": {
-            "text-color": "#954A00",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "Alert": {
-            "text-color": "#B12458",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -103,7 +103,7 @@
             "underline": false
         },
         "Preprocessor": {
-            "text-color": "#B12458",  
+            "text-color": "#9b1d3d",  
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -117,7 +117,7 @@
             "underline": false
         },
         "VerbatimString": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -145,21 +145,21 @@
             "underline": false
         },
         "Char": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "DataType": {
-            "text-color": "#B12458",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "Float": {
-            "text-color": "#954A00",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,
@@ -180,21 +180,21 @@
             "underline": false
         },
         "Constant": {
-            "text-color": "#954A00", 
+            "text-color": "#994800", 
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "SpecialChar": {
-            "text-color": "#006C4A",
+            "text-color": "#006C57",
             "background-color": null,
             "bold": false,
             "italic": false,
             "underline": false
         },
         "DecVal": {
-            "text-color": "#954A00",
+            "text-color": "#9b1d3d",
             "background-color": null,
             "bold": false,
             "italic": false,

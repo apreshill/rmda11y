@@ -15,42 +15,6 @@ source("functions.R", local = knitr::knit_global())
 ```
 
 
-## Log changes
-
-### Round 1, suggested by Hadley
-
-op -> fu (operators to #4254A7 - cobalt) 
-
-pp -> dt (preprocessor to #aa5d00 - a11y chelsea gem)
-
-do -> co (documentation to #545454 - a11y emporer)
-
-cn -> fl (constant to #a1024a - magenta)
-
-ss -> st (special string to #008000 - a11y japanese laurel)
-
-er/al -> old cn (errors/alerts to #d91e18 - a11y thunderbird;
-functionally replace #ff0000 with #d91e18)
-
-### Round 2, added by Alison
-
-at -> st (attribute to #008000 - a11y japanese laurel)
-
-### Round 3, added by Alison (again)
-
-`#545454` -> `#5E5E5E` (an/in/wa/do/co/cv) [replace a11y emporer]
-
-`#007faa` -> `#006893` (ot/cf/kw) [replace a11y deep cerulean]
-
-`#d91e18` -> `#BD1600` (er/al) [replace a11y thunderbird]
-
-`#008000` -> `#006E4C` (at/ss/st/vs/ch/sc) [replace a11y japanese laurel]
-
-`#4254A7` -> `#4452C4` (fu/op) [not a11y]
-
-`#19177c` -> `#??` (va) [not a11y]
-
-
 ## Exploration 
 
 ```{r}
@@ -90,11 +54,11 @@ plot(prismatic::color(col2$fg), labels = TRUE)
 
 ## Problems now:
 
-1. `a11y` deep cerulean (`#007BA5`) is not high enough contrast with `#f8f8f8` background color
+1. `a11y` deep cerulean (`#007faa`) is not high enough contrast with `#f8f8f8` background color
 
     ```{r}
     col2 %>% filter(contrast < 4.5)
-    ```
+    ``` 
 
 
 1. `va` is too close to `fu/op` (two blues)
@@ -189,9 +153,11 @@ col4 %>% plot_uv()
 plot(prismatic::color(col4$fg), labels = TRUE)
 ```
 
-+ feels like need to choose between va / dt / er / al 
++ feels like need to choose between those last 3 colors- all too close #BC1500 -> #B12458
 
 + also feels like lightness correction overcorrects for chelsea gem and deep cerulean, would rather keep those as fg_before4 vals just make sure the contrast is optimal
+
++ can combine keyword with fu/op? #4452C4 -> #006893
 
 ## Check in
 
@@ -216,38 +182,11 @@ col_v2 %>%
 plot(prismatic::color(col_v2$fg), labels = TRUE)
 ```
 
-
-
-
-
+Compare them
 ```{r}
-testing <- tibble(
-  fg = c("#5842ff", "#7060eb", "#06805e", "#3D9970", "#003366", "#D63519", "#DD2810", "#9a61b2"),
-  abbr = c("electric", "blue", "green", "olive", "navy", "new_red", "redd", "zoo")
-)
-
-# some candidate color replacements
-cand_colors <- tribble(
-  ~abbr, ~fg,
-  "ocean_green", "#3D9970", 
-  "royal_heath", "#9E2F91",
-  "purple", "#9b009e",
-  "elf_green", "#06805e",
-  "thunderbird", "#D63519",
-  "gov_bay", "#3b4bbf",
-  "atoll", "#096B72") %>%
-  mutate(
-    fg = modify_hcl(fg, l = 40),
-    contrast = contrast_ratio(fg, bg)
-  ) 
-
-# all check out for contrast
-cand_colors
-
-plot_uv(cand_colors)
+library(waldo)
+compare(col4, col_v2)
 ```
-
-
 
 
 # Adjust chroma? 
@@ -295,6 +234,77 @@ col4 %>%
 # colours are further apart - e.g. switch bn/fl/dv with dt
 ```
 
+## Log changes
+
+### Round 1, suggested by Hadley
+
+op -> fu (operators to #4254A7 - cobalt) 
+
+pp -> dt (preprocessor to #aa5d00 - a11y chelsea gem)
+
+do -> co (documentation to #545454 - a11y emporer)
+
+cn -> fl (constant to #a1024a - magenta)
+
+ss -> st (special string to #008000 - a11y japanese laurel)
+
+er/al -> old cn (errors/alerts to #d91e18 - a11y thunderbird;
+functionally replace #ff0000 with #d91e18)
+
+```{r ref.label="col"}
+
+```
+
+
+### Round 2, added by Alison
+
+at -> st (attribute to #008000 - a11y japanese laurel)
+
+```{r ref.label="col2"}
+
+```
+
+### Round 3, added by Alison (again)
+
+`#545454` -> `#5E5E5E` (an/in/wa/do/co/cv) [replace a11y emporer]
+
+`#007faa` -> `#006893` (ot/cf/kw) [replace a11y deep cerulean]
+
+`#d91e18` -> `#BD1600` (er/al) [replace a11y thunderbird]
+
+`#008000` -> `#006E4C` (at/ss/st/vs/ch/sc) [replace a11y japanese laurel]
+
+`#4254A7` -> `#4452C4` (fu/op) [not a11y]
+
+`#19177c` -> `#??` (va) [not a11y]
+
+`#4452C4` -> `#006893` (fu/op/ot/cf/kw) 
+
+`#BC1500` -> `#B12458` (er/al/pp/dt)
+
+```{r ref.label="col3"}
+
+```
+
+
+
+
+```{r col, include=FALSE}
+col4 %>% select(ends_with("2"), abbr)
+```
+
+```{r col2, include=FALSE}
+col4 %>% select(ends_with("3"), abbr)
+```
+
+```{r col3, include=FALSE}
+col4 %>% select(ends_with("4"), abbr)
+```
+
+```{r col4, include=FALSE}
+col4
+```
+
 ---
 ## ukekele moon :)
 
@@ -317,7 +327,7 @@ ukelele <- tribble(
   )
 
 ukelele
-plot_uv(ukelele) +coord_cartesian(xlim = c(-80, 80), ylim = c(-75, 75))
+plot_uv(ukelele) 
 plot(prismatic::color(ukelele$fg), labels = TRUE)
 
 ukelele %>%
@@ -342,3 +352,18 @@ green
 #5e5e5e -> gray  #5E5E5E (don't change!)
 
 #111 -> fox   #994800 
+
+v1 is distill original
+
+v2 is Hadley edits
+
+v3 is ukelele moon
+
+v4 is variables = black like v2, keep fl = #9b1d3d, but split cn from #9b1d3d -> #994800
+
+v5 is v4, but #0c2b85 -> #4758AB
+
+```{r}
+modify_hcl("#4254a7", l = 40)
+```
+

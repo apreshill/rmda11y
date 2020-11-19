@@ -4,8 +4,8 @@ author: "Alison Hill"
 date: "11/11/2020"
 output:
   distill::distill_article:
-    highlight: a11y_v3.theme
-knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'a11y_v3.html')) })
+    highlight: a11y_v2.theme
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'a11y_v2.html')) })
 ---
 
 ```{r setup, include=FALSE}

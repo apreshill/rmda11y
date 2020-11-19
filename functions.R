@@ -128,10 +128,10 @@ plot_uv <- function(df) {
     geom_point(aes(colour = fg), size = 10) +
     geom_text(aes(label = abbr), nudge_y = -5) +
     scale_colour_identity() +
-    coord_equal() +
+    coord_equal(xlim = c(-150, 150), ylim = c(-100, 100)) +
     labs(x = NULL, y = NULL) +
     theme(plot.background = element_rect(fill = bg)) +
-    labs(x = "u = green/red", y = "v = blue/yellow")
+    labs(x = "u = green/red", y = "v = blue/yellow") 
 }
 
 
