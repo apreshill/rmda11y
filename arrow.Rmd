@@ -15,7 +15,7 @@ source("functions.R", local = knitr::knit_global())
 
 ```{r}
 bg <- "#f8f8f8"
-lum <- 38
+lum <- 40 # was 38
 
 cols <- tribble(
   ~abbr, ~color,
@@ -85,14 +85,15 @@ pal %>%
 
 ## Testing
 
-```{r}
+```{r fig.path="arrow/"}
 arrow <- read_theme("themes/arrow.theme")
 
 colors <- arrow %>%
   group_by(fg) %>%
   summarise(abbr = paste(abbr, collapse = "/"), .groups = "drop") %>%
   filter(!is.na(fg)) %>% 
-  mutate(contrast = contrast_ratio(fg, bg))
+  mutate(contrast = contrast_ratio(fg, bg)) %>% 
+  mutate(hcl(fg))
 
 colors %>% plot_uv()
 
@@ -100,5 +101,13 @@ colors %>% plot_cl()
 
 plot(prismatic::color(colors$fg), 
      labels = TRUE)
+
+colors %>%
+  mutate(fg = prismatic::clr_deutan(fg)) %>%
+  plot_uv()
+
+colors %>%
+  mutate(fg = prismatic::clr_greyscale(fg)) %>%
+  plot_cl()
 ```
 
