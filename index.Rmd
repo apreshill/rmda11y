@@ -1,5 +1,5 @@
 ---
-title: "The R Markdown a11y theme"
+title: "Walk through"
 author: "Alison Hill"
 date: "11/11/2020"
 output: distill::distill_article
@@ -19,9 +19,8 @@ source("functions.R", local = knitr::knit_global())
 
 ```{r}
 a11y <- read_theme("https://github.com/rstudio/distill/raw/master/inst/rmarkdown/templates/distill_article/resources/a11y.theme")
-#a11y <- read_theme("a11y_v2.theme")
-
-#a11y <- read_theme("a11y_v3.theme")
+#a11y <- read_theme("themes/a11y_v2.theme")
+#a11y <- read_theme("themes/a11y_v3.theme")
 
 bg <- "#f8f8f8"
 col <- a11y %>%
@@ -63,7 +62,7 @@ plot(prismatic::color(col2$fg), labels = TRUE)
 
 1. `va` is too close to `fu/op` (two blues)
 
-1. Lightness: adjust to about 40 (check)
+1. Lightness: adjust to about 40?
 
 1. Colorfulness: colors with similar chroma values will look less jarring
 
@@ -94,7 +93,7 @@ plot(prismatic::color(col3$fg), labels = TRUE)
 
 ## Make colors more distinct -> `col4`
 
-aka questioning all the decisions thus far
+AKA questioning all the decisions thus far
 
 1. `va` is too close to `fu/op`
 
@@ -151,6 +150,21 @@ col4 <- col3 %>%
 col4 %>% plot_uv()
 
 plot(prismatic::color(col4$fg), labels = TRUE)
+
+hues_4 <- col4 %>%
+  mutate(hcl(fg)) %>% 
+  pull(h)
+
+colorspace::max_chroma(h = hues_4, l = 40)
+
+hues_4 <- col4 %>%
+  mutate(hcl(fg)) %>% 
+  mutate(max_c = colorspace::max_chroma(h, l = 40)) %>% 
+  mutate(max_hex = farver::encode_colour(
+    cbind(h, max_c, l), from = "hcl")
+    )
+
+plot(prismatic::color(hues_4$max_hex), labels = TRUE)
 ```
 
 + feels like need to choose between those last 3 colors- all too close #BC1500 -> #B12458
@@ -240,11 +254,15 @@ col4 %>%
 
 op -> fu (operators to #4254A7 - cobalt) 
 
+unmerged the above!
+
 pp -> dt (preprocessor to #aa5d00 - a11y chelsea gem)
 
 do -> co (documentation to #545454 - a11y emporer)
 
 cn -> fl (constant to #a1024a - magenta)
+
+unmerged the above!
 
 ss -> st (special string to #008000 - a11y japanese laurel)
 

@@ -1,0 +1,104 @@
+---
+title: "Arrow"
+author: "Alison Hill"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(scipen=999)
+```
+
+```{r, include=FALSE}
+source("functions.R", local = knitr::knit_global())
+```
+
+```{r}
+bg <- "#f8f8f8"
+lum <- 38
+
+cols <- tribble(
+  ~abbr, ~color,
+  "functions", "#4758ab", # cobalt
+  "strings", "#2f7851",   # green #2f7851
+  "constants", "#994800", # chelsea gem 
+  "floats", "#ac1e42",    # magenta #a1024a
+  "keywords", "#007BA5",  # deep cerulean substitute,#006893 
+  "comments", "#545454",  # grey
+  "vars", "#111111"       # deep blue, #19177c
+  )
+
+maxxed <- cols %>% 
+  mutate(max_chroma(color, new_l = lum)) %>% 
+  mutate(contrast = contrast_ratio(fg, bg))
+```
+
+
+```{r}
+maxxed %>% 
+  select(abbr, fg, contrast, everything()) %>% 
+  arrange(contrast)
+
+maxxed %>% plot_uv()
+
+maxxed %>% plot_cl()
+
+plot(prismatic::color(maxxed$fg), 
+     labels = TRUE)
+```
+
+```{r}
+pal <- maxxed %>% 
+  mutate(fg = case_when(
+    # just lighten these
+    abbr %in% c("functions", "comments") ~ modify_hcl(color, l = lum),
+    # leave these alone
+    abbr %in% c("vars", "keywords") ~ color,
+    # all else, max chroma
+    TRUE ~ fg
+  )) %>% 
+  mutate(contrast = contrast_ratio(fg, bg)) %>% 
+  select(abbr, fg, contrast, color)
+
+pal %>% plot_uv()
+
+pal %>% plot_cl()
+
+plot(prismatic::color(pal$fg), 
+     labels = TRUE)
+
+pal
+```
+
+
+## Color blindness
+
+```{r}
+pal %>%
+  mutate(fg = prismatic::clr_deutan(fg)) %>%
+  plot_uv()
+
+pal %>%
+  mutate(fg = prismatic::clr_greyscale(fg)) %>%
+  plot_cl()
+```
+
+## Testing
+
+```{r}
+arrow <- read_theme("themes/arrow.theme")
+
+colors <- arrow %>%
+  group_by(fg) %>%
+  summarise(abbr = paste(abbr, collapse = "/"), .groups = "drop") %>%
+  filter(!is.na(fg)) %>% 
+  mutate(contrast = contrast_ratio(fg, bg))
+
+colors %>% plot_uv()
+
+colors %>% plot_cl()
+
+plot(prismatic::color(colors$fg), 
+     labels = TRUE)
+```
+

@@ -4,12 +4,12 @@ author: "Alison Hill"
 date: "11/11/2020"
 output:
   distill::distill_article:
-    highlight: a11y.theme
-knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'a11y.html')) })
+    highlight: themes/arrow.theme
+knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'arrow.html')) })
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
 options(scipen=999)
 library(tidyverse)
 ```

@@ -2,6 +2,7 @@ library(purrr)
 library(ggplot2)
 library(dplyr)
 library(farver)
+library(colorspace)
 
 # Functions ---------------------------------------------------------------
 
@@ -106,6 +107,16 @@ hcl <- function(x) {
   mat <- decode_colour(x, to = "hcl")
   as.data.frame(mat)
 }
+
+max_chroma <- function(x, new_l) {
+  mat <- decode_colour(x, to = "hcl")
+  as.data.frame(mat) %>% 
+    mutate(max_c = colorspace::max_chroma(h, l = new_l)) %>% 
+    mutate(fg = farver::encode_colour(
+      cbind(h, max_c, l), from = "hcl")
+    ) 
+}
+  
 
 # Specialised plots -------------------------------------------------------
 
