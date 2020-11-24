@@ -21,7 +21,7 @@ cols <- tribble(
   ~abbr, ~color,
   "functions", "#4758ab", # cobalt
   "strings", "#2f7851",   # green #2f7851
-  "constants", "#994800", # chelsea gem 
+  "constants", "#AB5F20", # chelsea gem #994800
   "floats", "#ac1e42",    # magenta #a1024a
   "keywords", "#007BA5",  # deep cerulean substitute,#006893 
   "comments", "#545454",  # grey
