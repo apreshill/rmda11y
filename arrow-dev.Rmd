@@ -22,7 +22,7 @@ cols <- tribble(
   "functions", "#4758ab", # cobalt
   "strings", "#2f7851",   # green #2f7851
   "constants", "#AB5F20", # chelsea gem #994800
-  "floats", "#ac1e42",    # magenta #a1024a
+  "floats", "#a40000",    # magenta #a1024a
   "keywords", "#007BA5",  # deep cerulean substitute,#006893 
   "comments", "#545454",  # grey
   "vars", "#111111"       # deep blue, #19177c
