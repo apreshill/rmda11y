@@ -18,7 +18,7 @@ source("functions.R", local = knitr::knit_global())
 ## Exploration 
 
 ```{r}
-a11y <- read_theme("https://github.com/rstudio/distill/raw/master/inst/rmarkdown/templates/distill_article/resources/a11y.theme")
+a11y <- read_theme("https://github.com/rstudio/distill/raw/master/inst/rmarkdown/templates/distill_article/resources/arrow.theme")
 #a11y <- read_theme("themes/a11y_v2.theme")
 #a11y <- read_theme("themes/a11y_v3.theme")
 
