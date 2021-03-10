@@ -4,7 +4,8 @@ author: "Alison Hill"
 date: "11/11/2020"
 output:
   distill::distill_article:
-    highlight: default
+    highlight: themes/arrow-pandoc.theme
+    highlight_downlit: false
 knit: (function(inputFile, encoding) { rmarkdown::render(inputFile, encoding = encoding, output_file = file.path(dirname(inputFile), 'arrow.html')) })
 ---
 
@@ -22,11 +23,16 @@ source("functions.R", local = knitr::knit_global())
 
 ```{r}
 rmarkdown::metadata$output %>% 
-  pluck(1, 1)
+  pluck(1, "highlight")
 ```
 
 
+## Downlit used?
 
+```{r}
+rmarkdown::metadata$output %>% 
+  pluck(1, "highlight_downlit")
+```
 
 ## Testing colors here
 
